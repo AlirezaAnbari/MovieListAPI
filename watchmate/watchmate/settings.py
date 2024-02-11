@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'watchlist_app',
-    'djangorestframework',
+    'rest_framework',
     
 ]
 
