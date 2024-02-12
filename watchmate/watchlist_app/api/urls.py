@@ -8,7 +8,9 @@ urlpatterns = [
     # path('list/<int:pk>/', views.movie_detail, name='movie-details'),
     
     # APIView
-    path('list/', views.MovieListAPIView.as_view(), name='movie-list'),
-    path('list/<int:pk>/', views.MovieDetailAPIView.as_view(), name='movie-details'),
-
+    path('list/', views.WatchListAPIView.as_view(), name='watchlist-list'),
+    path('list/<int:pk>/', views.WatchListDetailAPIView.as_view(), name='watchlist-details'),
+    path('stream/', views.StreamPlatformAPIView.as_view(), name='stream'),
+    path('stream/<int:pk>/', views.StreamPlatformDetailAPIView.as_view(), name='stream-details'),
+    
 ]
