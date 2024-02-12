@@ -58,7 +58,7 @@ class StreamPlatformAPIView(APIView):
 
     def get(self, request):
         platform = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializer(platform, many=True)
+        serializer = StreamPlatformSerializer(platform, many=True, context={'request': request})
         return Response(serializer.data)
     
     def post(self, request):
@@ -74,10 +74,10 @@ class StreamPlatformDetailAPIView(APIView):
 
     def get(self, request, pk):
         try:
-            movie = StreamPlatform.objects.get(pk=pk)
+            platform = StreamPlatform.objects.get(pk=pk)
         except StreamPlatform.DoesNotExist:
             return Response({'Error': 'not found'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = StreamPlatformSerializer(movie)
+        serializer = StreamPlatformSerializer(platform, context={'request': request})
         return Response(serializer.data) 
     
     def put(self, request, pk):
@@ -89,8 +89,8 @@ class StreamPlatformDetailAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
     def delete(self, request, pk):
-        movie = WatchList.objects.get(pk=pk)
-        movie.delete()
+        platform = WatchList.objects.get(pk=pk)
+        platform.delete()
         content = {'Completely deleted'}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
         
