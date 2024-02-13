@@ -1,6 +1,11 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include 
+from rest_framework.routers import DefaultRouter
 from watchlist_app.api import views
+
+
+router = DefaultRouter()
+router.register('stream', views.StreamPlatformViewSet, basename='streamplatform')
 
 urlpatterns = [
     # FBV
@@ -10,8 +15,8 @@ urlpatterns = [
     # APIView
     path('list/', views.WatchListAPIView.as_view(), name='watchlist-list'),
     path('list/<int:pk>/', views.WatchListDetailAPIView.as_view(), name='watchlist-detail'),
-    path('stream/', views.StreamPlatformAPIView.as_view(), name='stream-list'),
-    path('stream/<int:pk>/', views.StreamPlatformDetailAPIView.as_view(), name='streamplatform-detail'),
+    # path('stream/', views.StreamPlatformAPIView.as_view(), name='stream-list'),
+    # path('stream/<int:pk>/', views.StreamPlatformDetailAPIView.as_view(), name='streamplatform-detail'),
     
     # Generics
     # path('review/', views.ReviewList.as_view(), name='review-list'),
@@ -21,5 +26,6 @@ urlpatterns = [
     path('stream/<int:pk>/review-create/', views.ReviewCreate.as_view(), name='review-create'),
     path('stream/review/<int:pk>/', views.ReviewDetail.as_view(), name='review-detail'),
     
+    path('', include(router.urls)),
     
 ]

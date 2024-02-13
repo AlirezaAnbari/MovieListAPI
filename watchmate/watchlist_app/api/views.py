@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import status
+from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
 
 from watchlist_app.models import WatchList, StreamPlatform, Review
 from .serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
@@ -183,3 +185,33 @@ class ReviewCreate(generics.CreateAPIView):
         movie = WatchList.objects.get(pk=pk)
         
         serializer.save(watchlist=movie)
+        
+        
+# Viewset
+'''
+class StreamPlatformViewSet(viewsets.ViewSet):
+    
+    def list(self, request):
+        queryset = StreamPlatform.objects.all()
+        serializer = StreamPlatformSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    def retrieve(self, request, pk=None):
+        queryset = StreamPlatform.objects.all()
+        watchlist = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(watchlist, context={'request': request})
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = StreamPlatformSerializer
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+'''
+
+# ModelViewSet
+class StreamPlatformViewSet(viewsets.ModelViewSet):
+    queryset = StreamPlatform.objects.all()
+    serializer_class = StreamPlatformSerializer
