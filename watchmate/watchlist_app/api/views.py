@@ -1,9 +1,11 @@
 from rest_framework.response import Response
 # from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework import generics, mixins
 from rest_framework import status
-from watchlist_app.models import WatchList, StreamPlatform
-from .serializers import WatchListSerializer, StreamPlatformSerializer
+
+from watchlist_app.models import WatchList, StreamPlatform, Review
+from .serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 
 # FBV
 '''
@@ -135,3 +137,49 @@ class WatchListDetailAPIView(APIView):
         movie.delete()
         content = {'Completely deleted'}
         return Response(content, status=status.HTTP_204_NO_CONTENT)
+
+
+# Generic + mixins
+'''
+class ReviewList(generics.GenericAPIView,mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+    
+class ReviewDetail(generics.GenericAPIView, mixins.RetrieveModelMixin):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+'''
+
+
+# Generic(Concrete) view
+class ReviewList(generics.ListCreateAPIView):
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(watchlist=pk)    
+    
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+    
+class ReviewCreate(generics.CreateAPIView):
+    serializer_class = ReviewSerializer
+    
+    def perform_create(self, serializer):
+        pk = self.kwargs.get('pk')
+        movie = WatchList.objects.get(pk=pk)
+        
+        serializer.save(watchlist=movie)
