@@ -13,8 +13,8 @@ urlpatterns = [
     # path('list/<int:pk>/', views.movie_detail, name='movie-details'),
     
     # APIView
-    path('list/', views.WatchListAPIView.as_view(), name='watchlist-list'),
-    path('list/<int:pk>/', views.WatchListDetailAPIView.as_view(), name='watchlist-detail'),
+    path('list/', views.WatchListAPIView.as_view(), name='movie-list'),
+    path('list/<int:pk>/', views.WatchListDetailAPIView.as_view(), name='movie-detail'),
     # path('stream/', views.StreamPlatformAPIView.as_view(), name='stream-list'),
     # path('stream/<int:pk>/', views.StreamPlatformDetailAPIView.as_view(), name='streamplatform-detail'),
     

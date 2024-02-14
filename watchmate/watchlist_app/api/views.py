@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
 from watchlist_app.models import WatchList, StreamPlatform, Review
@@ -178,13 +179,20 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     
     
 class ReviewCreate(generics.CreateAPIView):
+    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
-        movie = WatchList.objects.get(pk=pk)
+        watchlist = WatchList.objects.get(pk=pk)
         
-        serializer.save(watchlist=movie)
+        review_user = self.request.user
+        review_queryset = Review.objects.filter(watchlist=watchlist, review_user=review_user)
+        
+        if review_queryset.exists():
+            raise ValidationError("You have already reviewed this watch!")
+        
+        serializer.save(watchlist=watchlist, review_user=review_user)
         
         
 # Viewset
