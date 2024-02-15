@@ -5,8 +5,10 @@ from rest_framework import generics, mixins
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
 
+from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly 
 from watchlist_app.models import WatchList, StreamPlatform, Review
 from .serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 
@@ -168,6 +170,7 @@ class ReviewDetail(generics.GenericAPIView, mixins.RetrieveModelMixin):
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -176,6 +179,7 @@ class ReviewList(generics.ListCreateAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [ReviewUserOrReadOnly]
     
     
 class ReviewCreate(generics.CreateAPIView):
