@@ -29,6 +29,8 @@ class Review(models.Model):
     description = models.CharField(max_length=255, null=True)
     watchlist = models.ForeignKey(WatchList, on_delete=models.CASCADE, blank=True, related_name="reviews")
     active = models.BooleanField(default=True)
+    avg_rating = models.FloatField(default=0)
+    number_rating = models.IntegerField(default=0)
     
     created = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
