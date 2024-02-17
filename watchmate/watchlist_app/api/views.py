@@ -118,7 +118,7 @@ class WatchListAPIView(APIView):
             return Response(serializer.errors)
         
         
-class WatchListDetailAPIView(APIView):
+class WatchDetailAPIView(APIView):
     
     def get(self, request, pk):
         try:
@@ -167,10 +167,10 @@ class ReviewDetail(generics.GenericAPIView, mixins.RetrieveModelMixin):
 
 
 # Generic(Concrete) view
-class ReviewList(generics.ListCreateAPIView):
+class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -185,6 +185,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 class ReviewCreate(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')

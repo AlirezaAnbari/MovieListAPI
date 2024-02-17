@@ -9,13 +9,13 @@ from .models import (WatchList,
 # Register your models here.
 class CustomReviewAdmin(admin.ModelAdmin):
     model = Review
-    list_display = ["id", "review_user", "rating","watchlist", "number_rating", "avg_rating"]
+    list_display = ["id", "review_user", "rating","watchlist"]
     list_filter = ["rating","watchlist",]
     
     
 class CustomWatchListAdmin(admin.ModelAdmin):
     model = WatchList
-    list_display = ["id", "title", "platform"]
+    list_display = ["id", "title", "platform", "number_rating", "avg_rating"]
     list_filter = ["id","title"]
     
     
