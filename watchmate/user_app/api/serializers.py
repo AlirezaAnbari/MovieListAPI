@@ -15,11 +15,22 @@ class RegisterationSerializer(serializers.ModelSerializer):
         }
         
     def save(self):
-          password = self.valiated_data['password']
-          password2 = self.valiated_data['password2']
+          password = self.validated_data['password']
+          password2 = self.validated_data['password2']
           
           if password != password2:
               raise ValidationError({'error': 'password1 must be equal to password2'})
           
           if User.objects.filter(email=self.validated_data['email']).exists():
-              raise ValidationError({'error': 'email already exists'})
+              raise ValidationError({'error': 'email already exists'}) 
+          
+          # Create instance
+          account = User(
+              email=self.validated_data['email'],
+              username=self.validated_data['username'],
+              
+          )
+          account.set_password(password)
+          account.save()
+          
+          return account
