@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
 
 
 class RegisterationSerializer(serializers.ModelSerializer):
@@ -13,5 +14,12 @@ class RegisterationSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
         
-    # def save(self):
-        
+    def save(self):
+          password = self.valiated_data['password']
+          password2 = self.valiated_data['password2']
+          
+          if password != password2:
+              raise ValidationError({'error': 'password1 must be equal to password2'})
+          
+          if User.objects.filter(email=self.validated_data['email']).exists():
+              raise ValidationError({'error': 'email already exists'})
