@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
 
-from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly 
+from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly 
 from watchlist_app.models import WatchList, StreamPlatform, Review
 from .serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 
@@ -62,6 +62,7 @@ def movie_detail(request, pk):
 
 # CBV-APIView
 class StreamPlatformAPIView(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         platform = StreamPlatform.objects.all()
@@ -78,6 +79,7 @@ class StreamPlatformAPIView(APIView):
         
         
 class StreamPlatformDetailAPIView(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, pk):
         try:
@@ -103,6 +105,7 @@ class StreamPlatformDetailAPIView(APIView):
         
 
 class WatchListAPIView(APIView):
+    permission_classes = [IsAdminOrReadOnly]
     
     def get(self, request):
         movies = WatchList.objects.all()
@@ -119,6 +122,7 @@ class WatchListAPIView(APIView):
         
         
 class WatchDetailAPIView(APIView):
+    permission_classes = [IsAdminOrReadOnly]
     
     def get(self, request, pk):
         try:
@@ -170,7 +174,7 @@ class ReviewDetail(generics.GenericAPIView, mixins.RetrieveModelMixin):
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -179,7 +183,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly]
+    permission_classes = [IsReviewUserOrReadOnly]
     
     
 class ReviewCreate(generics.CreateAPIView):
@@ -236,3 +240,4 @@ class StreamPlatformViewSet(viewsets.ViewSet):
 class StreamPlatformViewSet(viewsets.ModelViewSet):
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
+    permission_classes = [IsAdminOrReadOnly]

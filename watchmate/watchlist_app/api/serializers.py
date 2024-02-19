@@ -7,16 +7,17 @@ class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Review
-        fields = "__all__"
+        fields = ['review_user', 'rating', 'description']
   
 class WatchListSerializer(serializers.ModelSerializer): 
-    len_title = serializers.SerializerMethodField()
-    review = ReviewSerializer(many=True, read_only= True)
+    # len_title = serializers.SerializerMethodField()
+    reviews = ReviewSerializer(many=True, read_only=True)
+    platform = serializers.CharField(source='platform.name')
     
     class Meta:
         model = WatchList
-        fields = "__all__"
-        # fields = ['id', 'title', 'storyline']
+        # fields = "__all__"
+        fields = ['id', 'title', 'storyline', 'platform', 'reviews', 'created']
         # exclude = ['active']
         
     def get_len_title(self, object):

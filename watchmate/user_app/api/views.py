@@ -7,7 +7,7 @@ from user_app.api.serializers import RegisterationSerializer
 from user_app import models
 
 
-@api_view(['GET',])
+@api_view(['POST',])
 def logout_view(request):
     request.user.auth_token.delete()
     return Response(status=status.HTTP_200_OK)
