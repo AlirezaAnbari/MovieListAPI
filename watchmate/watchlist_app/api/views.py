@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly 
 from watchlist_app.models import WatchList, StreamPlatform, Review
 from .serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
+from .throttling import ReviewCreateThrottle, ReviewListThrottle
 
 # FBV
 '''
@@ -175,6 +176,7 @@ class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     # permission_classes = [IsAuthenticated]
+    throttle_classes = [ReviewListThrottle]
     
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -184,12 +186,15 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewUserOrReadOnly]
+    # throttle_classes = []
+    
     
     
 class ReviewCreate(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ReviewCreateThrottle]
     
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
